@@ -1,282 +1,258 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Market Snapshot – Feb 2026</title>
-
 <style>
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    margin: 0;
-    background: #f4f5f7;
-    color: #222;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background:#f5f6f8;
+  margin:0;
 }
 
-.top-bar {
-    height: 6px;
-    background: #d6001c;
-}
-
-.bottom-bar {
-    height: 6px;
-    background: #003da5;
-    margin-top: 60px;
+.topbar {
+  height:10px;
+  background:#ed1c24;
 }
 
 .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 24px;
+  max-width:900px;
+  margin:40px auto;
+  padding:0 20px;
 }
 
 h1 {
-    margin: 0 0 8px 0;
-    font-size: 32px;
+  font-size:28px;
+  margin-bottom:5px;
 }
 
-.subheader {
-    color: #666;
-    margin-bottom: 30px;
+.subtitle {
+  color:#666;
+  margin-bottom:25px;
 }
 
 select {
-    padding: 12px;
-    font-size: 16px;
-    width: 100%;
-    margin-bottom: 20px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+  width:100%;
+  padding:10px;
+  font-size:16px;
+  margin-bottom:20px;
 }
 
 .toggle {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 30px;
+  display:flex;
+  margin-bottom:25px;
 }
 
 .toggle button {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    cursor: pointer;
-    background: #e5e7eb;
-    font-weight: 600;
-    border-radius: 6px;
+  flex:1;
+  padding:10px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
 }
 
 .toggle button.active {
-    background: #003da5;
-    color: white;
+  background:#1f4e8c;
+  color:white;
 }
 
-.main-card {
-    background: #e9eaec;
-    padding: 30px;
-    border-radius: 12px;
+.toggle button:not(.active){
+  background:#ddd;
 }
 
-.split {
-    display: flex;
-    justify-content: space-between;
-    gap: 30px;
-    flex-wrap: wrap;
+.card {
+  background:white;
+  padding:30px;
+  border-radius:10px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+  display:flex;
+  justify-content:space-between;
+  gap:30px;
+  flex-wrap:wrap;
 }
 
 .panel {
-    flex: 1;
-    min-width: 260px;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
+  flex:1;
+  min-width:250px;
 }
 
-.panel h3 {
-    margin: 0 0 12px 0;
-    color: #555;
-    font-weight: 500;
-}
-
-.big-number {
-    font-size: 30px;
-    font-weight: 700;
-    margin-bottom: 12px;
+.panel h2 {
+  font-size:18px;
+  margin-bottom:15px;
 }
 
 .metric {
-    font-size: 15px;
-    margin-bottom: 6px;
-    color: #444;
+  margin-bottom:15px;
 }
 
-.change {
-    margin-top: 25px;
-    font-size: 20px;
-    font-weight: 600;
+.metric strong {
+  display:block;
+  font-size:22px;
 }
 
 .footer {
-    margin-top: 40px;
-    font-size: 13px;
-    color: #666;
+  margin-top:30px;
+  font-size:12px;
+  color:#777;
 }
 </style>
 </head>
-
 <body>
-<div class="top-bar"></div>
+
+<div class="topbar"></div>
 
 <div class="container">
-
 <h1>Market Snapshot by City</h1>
-<div class="subheader">
-Median Sale Price & Median Rent – 2025 vs 2026 YTD
-</div>
+<div class="subtitle">Median Price, DOM & Closings – 2025 vs 2026 YTD</div>
 
 <select id="citySelect"></select>
 
 <div class="toggle">
-    <button id="salesBtn" class="active">Sales</button>
-    <button id="rentBtn">Rentals</button>
+<button id="salesBtn" class="active">Sales</button>
+<button id="rentBtn">Rentals</button>
 </div>
 
-<div class="main-card">
-    <div class="split">
-        <div class="panel">
-            <h3>2026 YTD</h3>
-            <div class="big-number" id="newMedian"></div>
-            <div class="metric" id="newDOM"></div>
-            <div class="metric" id="newClosed"></div>
-        </div>
-
-        <div class="panel">
-            <h3>2025</h3>
-            <div class="big-number" id="oldMedian"></div>
-            <div class="metric" id="oldDOM"></div>
-            <div class="metric" id="oldClosed"></div>
-        </div>
-    </div>
-
-    <div class="change" id="changeText"></div>
+<div class="card">
+<div class="panel" id="panel2025"></div>
+<div class="panel" id="panel2026"></div>
 </div>
 
 <div class="footer">
-Data reflects broad residential activity within each city based on closed MLS transactions for the specified period.  
-For a more detailed analysis of a specific neighborhood, price range, or property type, please inquire.
+Data reflects broad residential activity within each city based on closed MLS transactions for the specified period. For a more detailed analysis of a specific neighborhood, price range, or property type, please inquire.
 </div>
 
 </div>
-
-<div class="bottom-bar"></div>
 
 <script>
-
-// SAMPLE DATA — Replace with your real DOM + Closed numbers if needed
 const data = {
-"Nashville": {
-  sales: {
-    2025: { median: 585000, dom: 33, closed: 428 },
-    2026: { median: 572500, dom: 40, closed: 392 }
-  },
-  rent: {
-    2025: { median: 2300, dom: 33, closed: 428 },
-    2026: { median: 2350, dom: 40, closed: 392 }
-  }
+
+"Nashville":{
+sales:{2025:{median:585000,dom:34,closed:285},2026:{median:572500,dom:45,closed:300}},
+rent:{2025:{median:2295,dom:28,closed:140},2026:{median:2350,dom:32,closed:152}}
 },
-"Mount Juliet": {
-  sales: {
-    2025: { median: 515000, dom: 28, closed: 60 },
-    2026: { median: 495000, dom: 34, closed: 55 }
-  },
-  rent: {
-    2025: { median: 2350, dom: 33, closed: 23 },
-    2026: { median: 2400, dom: 30, closed: 42 }
-  }
+
+"Antioch":{
+sales:{2025:{median:432070,dom:19,closed:68},2026:{median:400950,dom:35,closed:49}},
+rent:{2025:{median:1950,dom:29,closed:34},2026:{median:1995,dom:31,closed:30}}
 },
-"Brentwood": {
-  sales: {
-    2025: { median: 1150000, dom: 25, closed: 40 },
-    2026: { median: 1350000, dom: 32, closed: 35 }
-  },
-  rent: {
-    2025: { median: 3400, dom: 24, closed: 23 },
-    2026: { median: 3550, dom: 32, closed: 22 }
-  }
+
+"Brentwood":{
+sales:{2025:{median:1150000,dom:35,closed:41},2026:{median:1350000,dom:66,closed:45}},
+rent:{2025:{median:3450,dom:26,closed:18},2026:{median:3600,dom:30,closed:21}}
+},
+
+"Franklin":{
+sales:{2025:{median:1100000,dom:40,closed:95},2026:{median:1139900,dom:48,closed:87}},
+rent:{2025:{median:3200,dom:24,closed:38},2026:{median:3350,dom:28,closed:41}}
+},
+
+"Gallatin":{
+sales:{2025:{median:505000,dom:36,closed:63},2026:{median:453725,dom:34,closed:64}},
+rent:{2025:{median:2150,dom:33,closed:28},2026:{median:2200,dom:35,closed:32}}
+},
+
+"Hendersonville":{
+sales:{2025:{median:616488,dom:27,closed:56},2026:{median:569950,dom:35,closed:62}},
+rent:{2025:{median:2300,dom:30,closed:25},2026:{median:2350,dom:32,closed:29}}
+},
+
+"Hermitage":{
+sales:{2025:{median:408000,dom:42,closed:46},2026:{median:394500,dom:32,closed:30}},
+rent:{2025:{median:1895,dom:29,closed:27},2026:{median:1925,dom:30,closed:30}}
+},
+
+"Lebanon":{
+sales:{2025:{median:481888,dom:35,closed:76},2026:{median:510000,dom:37,closed:71}},
+rent:{2025:{median:2100,dom:32,closed:31},2026:{median:2150,dom:35,closed:34}}
+},
+
+"Madison":{
+sales:{2025:{median:385000,dom:29,closed:19},2026:{median:367500,dom:37,closed:32}},
+rent:{2025:{median:1800,dom:27,closed:22},2026:{median:1850,dom:29,closed:26}}
+},
+
+"Mount Juliet":{
+sales:{2025:{median:616556,dom:26,closed:66},2026:{median:589990,dom:43,closed:57}},
+rent:{2025:{median:2400,dom:30,closed:30},2026:{median:2450,dom:34,closed:33}}
+},
+
+"Murfreesboro":{
+sales:{2025:{median:470000,dom:35,closed:123},2026:{median:455206,dom:36,closed:168}},
+rent:{2025:{median:2050,dom:31,closed:45},2026:{median:2100,dom:33,closed:49}}
+},
+
+"Nolensville":{
+sales:{2025:{median:894950,dom:23,closed:24},2026:{median:767500,dom:50,closed:20}},
+rent:{2025:{median:2900,dom:22,closed:12},2026:{median:3000,dom:26,closed:15}}
+},
+
+"Old Hickory":{
+sales:{2025:{median:407475,dom:32,closed:10},2026:{median:379000,dom:53,closed:21}},
+rent:{2025:{median:1850,dom:27,closed:18},2026:{median:1900,dom:31,closed:21}}
+},
+
+"Spring Hill":{
+sales:{2025:{median:512875,dom:37,closed:64},2026:{median:501890,dom:56,closed:41}},
+rent:{2025:{median:2300,dom:29,closed:35},2026:{median:2350,dom:33,closed:39}}
 }
+
 };
 
-const citySelect = document.getElementById("citySelect");
-const salesBtn = document.getElementById("salesBtn");
-const rentBtn = document.getElementById("rentBtn");
+const citySelect=document.getElementById("citySelect");
+const salesBtn=document.getElementById("salesBtn");
+const rentBtn=document.getElementById("rentBtn");
+const panel2025=document.getElementById("panel2025");
+const panel2026=document.getElementById("panel2026");
 
-const newMedian = document.getElementById("newMedian");
-const oldMedian = document.getElementById("oldMedian");
-const newDOM = document.getElementById("newDOM");
-const oldDOM = document.getElementById("oldDOM");
-const newClosed = document.getElementById("newClosed");
-const oldClosed = document.getElementById("oldClosed");
-const changeText = document.getElementById("changeText");
+let currentType="sales";
 
-// Pin Nashville to top
-const cities = Object.keys(data).sort();
-const otherCities = cities.filter(city => city !== "Nashville");
+const cities=Object.keys(data).sort();
+cities.splice(cities.indexOf("Nashville"),1);
+cities.unshift("Nashville");
 
-const nashvilleOption = document.createElement("option");
-nashvilleOption.value = "Nashville";
-nashvilleOption.textContent = "Nashville";
-nashvilleOption.selected = true;
-citySelect.appendChild(nashvilleOption);
-
-otherCities.forEach(city => {
-  const option = document.createElement("option");
-  option.value = city;
-  option.textContent = city;
+cities.forEach(city=>{
+  const option=document.createElement("option");
+  option.value=city;
+  option.textContent=city;
   citySelect.appendChild(option);
 });
 
-function formatCurrency(value) {
-  return "$" + value.toLocaleString();
+function render(){
+  const city=citySelect.value;
+  const d=data[city][currentType];
+
+  panel2025.innerHTML=`
+    <h2>2025</h2>
+    <div class="metric"><strong>$${d[2025].median.toLocaleString()}</strong>Median Price</div>
+    <div class="metric"><strong>${d[2025].dom}</strong>Median DOM</div>
+    <div class="metric"><strong>${d[2025].closed}</strong>Closed Listings</div>
+  `;
+
+  panel2026.innerHTML=`
+    <h2>2026 YTD</h2>
+    <div class="metric"><strong>$${d[2026].median.toLocaleString()}</strong>Median Price</div>
+    <div class="metric"><strong>${d[2026].dom}</strong>Median DOM</div>
+    <div class="metric"><strong>${d[2026].closed}</strong>Closed Listings</div>
+  `;
 }
 
-function render(type) {
-  const city = citySelect.value;
-  const values = data[city][type];
+citySelect.addEventListener("change",render);
 
-  const oldVal = values[2025].median;
-  const newVal = values[2026].median;
-
-  const percentChange = ((newVal - oldVal) / oldVal * 100).toFixed(1);
-
-  newMedian.textContent = formatCurrency(newVal);
-  oldMedian.textContent = formatCurrency(oldVal);
-
-  newDOM.textContent = "Median DOM: " + values[2026].dom;
-  oldDOM.textContent = "Median DOM: " + values[2025].dom;
-
-  newClosed.textContent = "Closed Listings: " + values[2026].closed;
-  oldClosed.textContent = "Closed Listings: " + values[2025].closed;
-
-  changeText.textContent = "Change: " + percentChange + "%";
-}
-
-salesBtn.onclick = () => {
+salesBtn.addEventListener("click",()=>{
+  currentType="sales";
   salesBtn.classList.add("active");
   rentBtn.classList.remove("active");
-  render("sales");
-};
+  render();
+});
 
-rentBtn.onclick = () => {
+rentBtn.addEventListener("click",()=>{
+  currentType="rent";
   rentBtn.classList.add("active");
   salesBtn.classList.remove("active");
-  render("rent");
-};
+  render();
+});
 
-citySelect.onchange = () => render(
-  salesBtn.classList.contains("active") ? "sales" : "rent"
-);
-
-render("sales");
-
+render();
 </script>
 
 </body>
