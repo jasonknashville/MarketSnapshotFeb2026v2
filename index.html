@@ -200,7 +200,79 @@ rent:{2025:{median:2300,dom:29,closed:35},2026:{median:2350,dom:33,closed:39}}
 
 <script>
 
-const data = {/* keep your full 14-city data exactly as-is */};
+const data = {
+
+"Nashville":{
+sales:{2025:{median:585000,dom:34,closed:285},2026:{median:572500,dom:45,closed:300}},
+rent:{2025:{median:2295,dom:28,closed:140},2026:{median:2350,dom:32,closed:152}}
+},
+
+"Antioch":{
+sales:{2025:{median:432070,dom:19,closed:68},2026:{median:400950,dom:35,closed:49}},
+rent:{2025:{median:1950,dom:29,closed:34},2026:{median:1995,dom:31,closed:30}}
+},
+
+"Brentwood":{
+sales:{2025:{median:1150000,dom:35,closed:41},2026:{median:1350000,dom:66,closed:45}},
+rent:{2025:{median:3450,dom:26,closed:18},2026:{median:3600,dom:30,closed:21}}
+},
+
+"Franklin":{
+sales:{2025:{median:1100000,dom:40,closed:95},2026:{median:1139900,dom:48,closed:87}},
+rent:{2025:{median:3200,dom:24,closed:38},2026:{median:3350,dom:28,closed:41}}
+},
+
+"Gallatin":{
+sales:{2025:{median:505000,dom:36,closed:63},2026:{median:453725,dom:34,closed:64}},
+rent:{2025:{median:2150,dom:33,closed:28},2026:{median:2200,dom:35,closed:32}}
+},
+
+"Hendersonville":{
+sales:{2025:{median:616488,dom:27,closed:56},2026:{median:569950,dom:35,closed:62}},
+rent:{2025:{median:2300,dom:30,closed:25},2026:{median:2350,dom:32,closed:29}}
+},
+
+"Hermitage":{
+sales:{2025:{median:408000,dom:42,closed:46},2026:{median:394500,dom:32,closed:30}},
+rent:{2025:{median:1895,dom:29,closed:27},2026:{median:1925,dom:30,closed:30}}
+},
+
+"Lebanon":{
+sales:{2025:{median:481888,dom:35,closed:76},2026:{median:510000,dom:37,closed:71}},
+rent:{2025:{median:2100,dom:32,closed:31},2026:{median:2150,dom:35,closed:34}}
+},
+
+"Madison":{
+sales:{2025:{median:385000,dom:29,closed:19},2026:{median:367500,dom:37,closed:32}},
+rent:{2025:{median:1800,dom:27,closed:22},2026:{median:1850,dom:29,closed:26}}
+},
+
+"Mount Juliet":{
+sales:{2025:{median:616556,dom:26,closed:66},2026:{median:589990,dom:43,closed:57}},
+rent:{2025:{median:2400,dom:30,closed:30},2026:{median:2450,dom:34,closed:33}}
+},
+
+"Murfreesboro":{
+sales:{2025:{median:470000,dom:35,closed:123},2026:{median:455206,dom:36,closed:168}},
+rent:{2025:{median:2050,dom:31,closed:45},2026:{median:2100,dom:33,closed:49}}
+},
+
+"Nolensville":{
+sales:{2025:{median:894950,dom:23,closed:24},2026:{median:767500,dom:50,closed:20}},
+rent:{2025:{median:2900,dom:22,closed:12},2026:{median:3000,dom:26,closed:15}}
+},
+
+"Old Hickory":{
+sales:{2025:{median:407475,dom:32,closed:10},2026:{median:379000,dom:53,closed:21}},
+rent:{2025:{median:1850,dom:27,closed:18},2026:{median:1900,dom:31,closed:21}}
+},
+
+"Spring Hill":{
+sales:{2025:{median:512875,dom:37,closed:64},2026:{median:501890,dom:56,closed:41}},
+rent:{2025:{median:2300,dom:29,closed:35},2026:{median:2350,dom:33,closed:39}}
+}
+
+};
 
 const citySelect=document.getElementById("citySelect");
 const salesBtn=document.getElementById("salesBtn");
@@ -237,34 +309,22 @@ function render(){
 
   panel2025.innerHTML=`
     <h2>2025</h2>
-    <div style="font-size:28px;font-weight:700;margin-bottom:6px;">
+    <div style="font-size:30px;font-weight:700;margin-bottom:4px;">
       ${formatCurrency(oldVal)}
     </div>
-    <div style="color:#555;font-size:14px;margin-bottom:10px;">
-      Median Price
-    </div>
-    <div style="font-size:14px;color:#555;">
-      Median DOM: ${d[2025].dom}
-    </div>
-    <div style="font-size:14px;color:#555;">
-      Closed Listings: ${d[2025].closed}
-    </div>
+    <div style="font-size:14px;color:#666;margin-bottom:12px;">Median Price</div>
+    <div style="font-size:14px;color:#555;">Median DOM: ${d[2025].dom}</div>
+    <div style="font-size:14px;color:#555;">Closed Listings: ${d[2025].closed}</div>
   `;
 
   panel2026.innerHTML=`
     <h2>2026 YTD</h2>
-    <div style="font-size:28px;font-weight:700;margin-bottom:6px;">
+    <div style="font-size:30px;font-weight:700;margin-bottom:4px;">
       ${formatCurrency(newVal)}
     </div>
-    <div style="color:#555;font-size:14px;margin-bottom:10px;">
-      Median Price
-    </div>
-    <div style="font-size:14px;color:#555;">
-      Median DOM: ${d[2026].dom}
-    </div>
-    <div style="font-size:14px;color:#555;">
-      Closed Listings: ${d[2026].closed}
-    </div>
+    <div style="font-size:14px;color:#666;margin-bottom:12px;">Median Price</div>
+    <div style="font-size:14px;color:#555;">Median DOM: ${d[2026].dom}</div>
+    <div style="font-size:14px;color:#555;">Closed Listings: ${d[2026].closed}</div>
     <div style="margin-top:18px;font-weight:600;color:${pctColor};">
       Change: ${pct>0?"+":""}${pct}%
     </div>
@@ -289,7 +349,7 @@ rentBtn.addEventListener("click",()=>{
 
 render();
 
-</script>
+
 </script>
 
 </body>
