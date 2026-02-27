@@ -198,6 +198,10 @@ rent:{2025:{median:2300,dom:29,closed:35},2026:{median:2350,dom:33,closed:39}}
 
 };
 
+<script>
+
+const data = {/* keep your full 14-city data exactly as-is */};
+
 const citySelect=document.getElementById("citySelect");
 const salesBtn=document.getElementById("salesBtn");
 const rentBtn=document.getElementById("rentBtn");
@@ -217,22 +221,53 @@ cities.forEach(city=>{
   citySelect.appendChild(option);
 });
 
+function formatCurrency(num){
+  return "$"+num.toLocaleString();
+}
+
 function render(){
   const city=citySelect.value;
   const d=data[city][currentType];
 
+  const oldVal=d[2025].median;
+  const newVal=d[2026].median;
+
+  const pct=((newVal-oldVal)/oldVal*100).toFixed(1);
+  const pctColor=pct>0?"#1a7f37":pct<0?"#b91c1c":"#444";
+
   panel2025.innerHTML=`
     <h2>2025</h2>
-    <div class="metric"><strong>$${d[2025].median.toLocaleString()}</strong>Median Price</div>
-    <div class="metric"><strong>${d[2025].dom}</strong>Median DOM</div>
-    <div class="metric"><strong>${d[2025].closed}</strong>Closed Listings</div>
+    <div style="font-size:28px;font-weight:700;margin-bottom:6px;">
+      ${formatCurrency(oldVal)}
+    </div>
+    <div style="color:#555;font-size:14px;margin-bottom:10px;">
+      Median Price
+    </div>
+    <div style="font-size:14px;color:#555;">
+      Median DOM: ${d[2025].dom}
+    </div>
+    <div style="font-size:14px;color:#555;">
+      Closed Listings: ${d[2025].closed}
+    </div>
   `;
 
   panel2026.innerHTML=`
     <h2>2026 YTD</h2>
-    <div class="metric"><strong>$${d[2026].median.toLocaleString()}</strong>Median Price</div>
-    <div class="metric"><strong>${d[2026].dom}</strong>Median DOM</div>
-    <div class="metric"><strong>${d[2026].closed}</strong>Closed Listings</div>
+    <div style="font-size:28px;font-weight:700;margin-bottom:6px;">
+      ${formatCurrency(newVal)}
+    </div>
+    <div style="color:#555;font-size:14px;margin-bottom:10px;">
+      Median Price
+    </div>
+    <div style="font-size:14px;color:#555;">
+      Median DOM: ${d[2026].dom}
+    </div>
+    <div style="font-size:14px;color:#555;">
+      Closed Listings: ${d[2026].closed}
+    </div>
+    <div style="margin-top:18px;font-weight:600;color:${pctColor};">
+      Change: ${pct>0?"+":""}${pct}%
+    </div>
   `;
 }
 
@@ -253,6 +288,8 @@ rentBtn.addEventListener("click",()=>{
 });
 
 render();
+
+</script>
 </script>
 
 </body>
